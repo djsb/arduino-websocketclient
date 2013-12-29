@@ -11,9 +11,9 @@ Try the example that is shown bellow.
 
 ### Example
 <pre><code>
-#include <Ethernet.h>
-#include <SPI.h>
-#include <WSClient.h>
+#include Ethernet.h>
+#include SPI.h>
+#include WSClient.h>
 
 
 // Ethernet Configuration
