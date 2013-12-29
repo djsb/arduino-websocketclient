@@ -3,6 +3,10 @@
 This library implements a websocket client for arduino.
 This library supports Sec-WebSocket-Version: 13
 
+## Limitations
+
+This library only supports sending 128 byte message including headers.
+
 ### Testing Environment
 
 This library was tested and should run well on the following boards:
