@@ -17,6 +17,16 @@ This library was tested and should run well on the following boards:
   * others with ATmega328 should work ok
   * others probably won't work ;) - send me some hardware and I'll try to port it
 
+This library was developed to support:
+  * Muzzley human interface for the Internet of Things - http://www.muzzley.com/
+
+This library was tested against the following websocket servers:
+  * muzzley - http://www.muzzley.com
+  * socket.io, sockjs, WebSocket-Node & should work fine on any WS implementation;
+  * kaazing gateway as used on http://www.websocket.org/echo.html (cheers kaazing for rocking the web)
+  * pusher - http://www.pusher.com/
+  * pubnub - http://www.pubnub.com/
+
 ### Getting started
 
 Install the library to "libraries" folder in your Arduino sketchbook folder. 
