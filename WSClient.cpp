@@ -8,20 +8,18 @@
 
 bool WSClient::handshake(Client &client) {
 
+
     socket_client = &client;
 
     // If there is a connected client->
     if (socket_client->connected()) {
         // Check request and look for websocket handshake
         if (analyzeRequest()) {
-
             return true;
 
         } else {
             // Might just need to break until out of socket_client loop.
-
             disconnectStream();
-
             return false;
         }
     } else {
@@ -51,12 +49,12 @@ int WSClient::charinstr(char* text, int len_text, char* string){
         }
         else
         {
-         pos_text -=pos_search;
-         pos_search = 0;
-     }
- }
+           pos_text -=pos_search;
+           pos_search = 0;
+       }
+   }
     // no match
- return -1;
+   return -1;
 }
 
 bool WSClient::array_cmp(char *a, char *b, int len_a, int len_b){
@@ -94,14 +92,13 @@ bool WSClient::analyzeRequest() {
         key[i] = b64Key[i];
     }
 
-
     socket_client->print(F("GET "));
     socket_client->print(path);
     socket_client->print(F(" HTTP/1.1\r\n"));
     socket_client->print(F("Upgrade: websocket\r\n"));
     socket_client->print(F("Connection: Upgrade\r\n"));
-    socket_client->print(F("Host: muzload-ca01.region.muzzley.com"));
-    //socket_client->print(host);
+    socket_client->print(F("Host: "));
+    socket_client->print(host);
     socket_client->print(CRLF); 
     socket_client->print(F("Sec-WebSocket-Key: "));
     socket_client->print(key);
@@ -109,14 +106,30 @@ bool WSClient::analyzeRequest() {
     socket_client->print(F("Sec-WebSocket-Version: 13\r\n"));
     socket_client->print(CRLF);
 
+    Serial.print(F("GET "));
+    Serial.print(path);
+    Serial.print(F(" HTTP/1.1\r\n"));
+    Serial.print(F("Upgrade: websocket\r\n"));
+    Serial.print(F("Connection: Upgrade\r\n"));
+    Serial.print(F("Host: "));
+    Serial.print(host);
+    Serial.print(CRLF); 
+    Serial.print(F("Sec-WebSocket-Key: "));
+    Serial.print(key);
+    Serial.print(CRLF);
+    Serial.print(F("Sec-WebSocket-Version: 13\r\n"));
+    Serial.print(CRLF);
+
+
+
     while (socket_client->connected() && !socket_client->available()) {
         delay(50);
     }
 
 
     while (!socket_client->available()) {
-      delay(50);
-  }
+        delay(50);
+    }
 
 
   int i=0;
@@ -326,23 +339,23 @@ return a;
 }
 
 void WSClient::sendEncodedData(char *str) {
-     int size = strlen(str);
+   int size = strlen(str);
 
     // string type
-    socket_client->write(0x81);
+   socket_client->write(0x81);
 
     // NOTE: no support for > 16-bit sized messages
-    if (size > 125) {
-        socket_client->write(size);
-        socket_client->write((uint8_t) (size >> 8));
-        socket_client->write((uint8_t) (size && 0xFF));
-    } else {
-        socket_client->write((uint8_t) size);
-    }
+   if (size > 125) {
+    socket_client->write(size);
+    socket_client->write((uint8_t) (size >> 8));
+    socket_client->write((uint8_t) (size && 0xFF));
+} else {
+    socket_client->write((uint8_t) size);
+}
 
-    for (int i=0; i<size; ++i) {
-        socket_client->write(str[i]);
-    }
+for (int i=0; i<size; ++i) {
+    socket_client->write(str[i]);
+}
 
 }
 
