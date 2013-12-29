@@ -3,9 +3,9 @@
 This library implements a websocket client for arduino.
 This library supports Sec-WebSocket-Version: 13
 
-## Limitations
+### Limitations
 
-This library only supports sending 128 byte message including headers.
+This library only supports sending 128 byte message (including headers).
 
 ### Testing Environment
 
@@ -14,6 +14,8 @@ This library was tested and should run well on the following boards:
   * Arduino Duemilanove w/ ATmega328
   * Arduino Ethernet
   * Arduino Mini w/ ATmega328
+  * others with ATmega328 should work ok
+  * others probably won't work ;) - send me some hardware and I'll try to port it
 
 ### Getting started
 
