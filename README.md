@@ -18,7 +18,8 @@ Try the example that is shown bellow.
 
 // Ethernet Configuration
 EthernetClient client;
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0xF2, 0x78 };
+byte mac[] = { 
+  0x90, 0xA2, 0xDA, 0x00, 0xF2, 0x78 };
 
 // Websocket initialization
 WSClient websocket;
@@ -28,12 +29,13 @@ void setup() {
   Ethernet.begin(mac); // initialize ethernet
   Serial.println(Ethernet.localIP()); // printout IP address for debug purposes
   delay(300); // this is arduino baby ;-)
-  
-  
+
+
   // Connect and test websocket server connectivity
   if (client.connect("echo.websocket.org", 80)) {
     Serial.println("Connected");
-  } else {
+  } 
+  else {
     Serial.println("Connection failed.");
     while(1) {
       // Hang on failure
@@ -43,47 +45,45 @@ void setup() {
   // Define path and host for Handshaking with the server
   websocket.path = "/";
   websocket.host = "echo.websocket.org";
-  
+
   if (websocket.handshake(client)) {
     Serial.println("Handshake successful");
-  } else {
+  } 
+  else {
     Serial.println("Handshake failed.");
     while(1) {
       // Hang on failure
     }
   }
-  
-  
-   
+
+
+
 }
 
 
 void loop() {
-String data;
-  
+  String data;
+
   if (client.connected()) {
-    
+
     data = websocket.getData();
 
     if (data.length() > 0) {
       Serial.print("Received data: ");
       Serial.println(data);
     }
-    
-    // capture the value of analog 1, send it along
-    pinMode(1, INPUT);
-    data = String(analogRead(1));
-    
-    websocket.sendData("a");
-    
-  } else {
-    
+
+    websocket.sendData("echo test");
+
+  } 
+  else {
+
     Serial.println("Client disconnected.");
     while (1) {
       // Hang on disconnect.
     }
   }
-  
+
   delay(3000);  // wait to fully let the client disconnect
 
 }
