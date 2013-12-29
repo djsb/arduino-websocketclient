@@ -3,12 +3,10 @@
 #include "base64.h"
 #include "MemoryFree.h"
 #include <Ethernet.h>
-#include <WebSocketClient.h>
+#include <WSClient.h>
 
 
-
-
-bool WebSocketClient::handshake(Client &client) {
+bool WSClient::handshake(Client &client) {
 
     socket_client = &client;
 
@@ -32,7 +30,7 @@ bool WebSocketClient::handshake(Client &client) {
 }
 
 
-int WebSocketClient::charinstr(char* text, int len_text, char* string){
+int WSClient::charinstr(char* text, int len_text, char* string){
 
     int pos_search = 0;
     int pos_text = 0;
@@ -61,7 +59,7 @@ int WebSocketClient::charinstr(char* text, int len_text, char* string){
  return -1;
 }
 
-bool WebSocketClient::array_cmp(char *a, char *b, int len_a, int len_b){
+bool WSClient::array_cmp(char *a, char *b, int len_a, int len_b){
   int n;
 
       // if their lengths are different, return false
@@ -77,7 +75,7 @@ for (n=0;n<len_a;n++)
     return true;
 }
 
-bool WebSocketClient::analyzeRequest() {
+bool WSClient::analyzeRequest() {
     int bite;
     bool foundupgrade = false;
     bool foundconnection = false;
@@ -95,8 +93,6 @@ bool WebSocketClient::analyzeRequest() {
     for (int i=0; i<24; ++i) {
         key[i] = b64Key[i];
     }
-
-
 
 
     socket_client->print(F("GET "));
@@ -188,12 +184,12 @@ return array_cmp(serverKey,b64Result,sizeof(serverKey), sizeof(b64Result));
 
 
 
-void WebSocketClient::disconnect() {
+void WSClient::disconnect() {
     disconnectStream();
 }
 
 
-void WebSocketClient::disconnectStream() {
+void WSClient::disconnectStream() {
 
     // Should send 0x8700 to server to tell it I'm quitting here.
     socket_client->write((uint8_t) 0x87);
@@ -205,7 +201,7 @@ void WebSocketClient::disconnectStream() {
 }
 
 
-char* WebSocketClient::getData() {
+char* WSClient::getData() {
     uint8_t msgtype;
     uint8_t bite;
     unsigned int length;
@@ -309,7 +305,7 @@ char* WebSocketClient::getData() {
     return (char*)socketStr;
 }
 
-void WebSocketClient::sendData(char *str) {
+void WSClient::sendData(char *str) {
     Serial.println(F("")); Serial.print(F("TX: "));
     for (int i=0; i<strlen(str); i++)
         Serial.print(str[i]);
@@ -320,7 +316,7 @@ void WebSocketClient::sendData(char *str) {
 
 
 
-int WebSocketClient::timedRead() {
+int WSClient::timedRead() {
   while (!socket_client->available()) {
     delay(50);  
 }
@@ -329,15 +325,15 @@ int a = socket_client->read();
 return a;
 }
 
-void WebSocketClient::sendEncodedData(char *str) {
-    int size = strlen(str);
+void WSClient::sendEncodedData(char *str) {
+     int size = strlen(str);
 
     // string type
     socket_client->write(0x81);
 
     // NOTE: no support for > 16-bit sized messages
     if (size > 125) {
-        socket_client->write(126);
+        socket_client->write(size);
         socket_client->write((uint8_t) (size >> 8));
         socket_client->write((uint8_t) (size && 0xFF));
     } else {
@@ -347,6 +343,7 @@ void WebSocketClient::sendEncodedData(char *str) {
     for (int i=0; i<size; ++i) {
         socket_client->write(str[i]);
     }
+
 }
 
 

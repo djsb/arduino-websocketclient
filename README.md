@@ -10,7 +10,84 @@ Install the library to "libraries" folder in your Arduino sketchbook folder.
 Try the example that is shown bellow.
 
 ### Example
-TODO: add example in this section
+<pre><code>
+#include <Ethernet.h>
+#include <SPI.h>
+#include <WSClient.h>
+
+
+// Ethernet Configuration
+EthernetClient client;
+byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0xF2, 0x78 };
+
+// Websocket initialization
+WSClient websocket;
+
+void setup() {
+  Serial.begin(9600);
+  Ethernet.begin(mac); // initialize ethernet
+  Serial.println(Ethernet.localIP()); // printout IP address for debug purposes
+  delay(300); // this is arduino baby ;-)
+  
+  
+  // Connect and test websocket server connectivity
+  if (client.connect("echo.websocket.org", 80)) {
+    Serial.println("Connected");
+  } else {
+    Serial.println("Connection failed.");
+    while(1) {
+      // Hang on failure
+    }
+  }
+
+  // Define path and host for Handshaking with the server
+  websocket.path = "/";
+  websocket.host = "echo.websocket.org";
+  
+  if (websocket.handshake(client)) {
+    Serial.println("Handshake successful");
+  } else {
+    Serial.println("Handshake failed.");
+    while(1) {
+      // Hang on failure
+    }
+  }
+  
+  
+   
+}
+
+
+void loop() {
+String data;
+  
+  if (client.connected()) {
+    
+    data = websocket.getData();
+
+    if (data.length() > 0) {
+      Serial.print("Received data: ");
+      Serial.println(data);
+    }
+    
+    // capture the value of analog 1, send it along
+    pinMode(1, INPUT);
+    data = String(analogRead(1));
+    
+    websocket.sendData("a");
+    
+  } else {
+    
+    Serial.println("Client disconnected.");
+    while (1) {
+      // Hang on disconnect.
+    }
+  }
+  
+  delay(3000);  // wait to fully let the client disconnect
+
+}
+</code></pre>
 
 ### Credits
 Thank you to:

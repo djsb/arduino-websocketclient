@@ -1,5 +1,5 @@
-#ifndef WEBSOCKETCLIENT_H_
-#define WEBSOCKETCLIENT_H_
+#ifndef WSCLIENT_H_
+#define WSCLIENT_H_
 
 
 
@@ -15,7 +15,7 @@
 
 #define SIZE(array) (sizeof(array) / sizeof(*array))
 
-class WebSocketClient {
+class WSClient {
 public:
 
 
@@ -39,12 +39,7 @@ public:
 
 private:
     Client *socket_client;
-    unsigned long _startMillis;
 
-    const char *socket_urlPrefix;
-
-    // Discovers if the client's header is requesting an upgrade to a
-    // websocket connection.
     bool analyzeRequest();
 
     
