@@ -7,7 +7,7 @@ This library supports Sec-WebSocket-Version: 13
 
 This library:
   * only supports sending a max 128 byte message (including headers);
-  * has a considerable memory and sketch size footprint has it uses heavy computation for Sha1, Base64 or MD5;
+  * has a considerable memory and sketch size footprint as it uses heavy computation on Sha1, Base64 or MD5;
 
 ### Testing Environment
 
