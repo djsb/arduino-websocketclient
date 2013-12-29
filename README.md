@@ -18,7 +18,7 @@ Install the library to "libraries" folder in your Arduino sketchbook folder.
 Try the example that is shown bellow.
 
 ### Example
-<code>
+<pre><code>
 #include <Ethernet.h>
 #include <SPI.h>
 #include <WSClient.h>
@@ -88,7 +88,7 @@ void loop() {
   delay(3000);  // wait to fully let the client disconnect
 
 }
-</code>
+</code></pre>
 
 ### Credits
 Thank you to:
