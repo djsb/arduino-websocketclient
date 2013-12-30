@@ -37,9 +37,9 @@ Try the example that is shown bellow.
 
 ### Example
 ``` arduino
-#include &ltEthernet.h>
-#include &ltSPI.h>
-#include &ltWSClient.h>
+#include <Ethernet.h>
+#include <SPI.h>
+#include <WSClient.h>
 
 // Ethernet Configuration
 EthernetClient client;
