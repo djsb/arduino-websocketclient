@@ -49,12 +49,12 @@ int WSClient::charinstr(char* text, int len_text, char* string){
         }
         else
         {
-           pos_text -=pos_search;
-           pos_search = 0;
-       }
-   }
+         pos_text -=pos_search;
+         pos_search = 0;
+     }
+ }
     // no match
-   return -1;
+ return -1;
 }
 
 bool WSClient::array_cmp(char *a, char *b, int len_a, int len_b){
@@ -134,33 +134,33 @@ bool WSClient::analyzeRequest() {
     }
 
 
-  int i=0;
-  char temp[80];
-  char serverKey[28];
+    int i=0;
+    char temp[80];
+    char serverKey[28];
 
     // TODO: Improve the extraction
-  while ((bite = socket_client->read()) != -1) {
-    temp[i] = (char)bite; i++;
-    if ((char)bite == '\n'){
+    while ((bite = socket_client->read()) != -1) {
+        temp[i] = (char)bite; i++;
+        if ((char)bite == '\n'){
 
-        int commaPosition = -1;
-        if (commaPosition = charinstr(temp, sizeof(temp), "Sec-WebSocket-Accept:") != -1){
+            int commaPosition = -1;
+            if (commaPosition = charinstr(temp, sizeof(temp), "Sec-WebSocket-Accept:") != -1){
 
-          if(commaPosition != -1)
-          {
-            commaPosition = commaPosition + 19;
-            for (int i=2; i<sizeof(temp); i++){
-                serverKey[i-2] = temp[i+commaPosition];
+              if(commaPosition != -1)
+              {
+                commaPosition = commaPosition + 19;
+                for (int i=2; i<sizeof(temp); i++){
+                    serverKey[i-2] = temp[i+commaPosition];
 
+                }
             }
+
         }
 
+        memset(temp, NULL, sizeof(temp));
+        i=0;
+
     }
-
-    memset(temp, NULL, sizeof(temp));
-    i=0;
-
-}
 
 }
 
@@ -341,17 +341,25 @@ return a;
 }
 
 void WSClient::sendEncodedData(char *str) {
-   int size = strlen(str);
+ int size = strlen(str);
 
     // string type
-   socket_client->write(0x81);
+ socket_client->write(0x81);
 
     // NOTE: no support for > 16-bit sized messages
-   if (size > 125) {
-    socket_client->write(size);
-    socket_client->write((uint8_t) (size >> 8));
-    socket_client->write((uint8_t) (size && 0xFF));
+ if (size > 125) {
+    //Serial.println(F("size bigger than 125"));
+    socket_client->write(127);
+    socket_client->write((uint8_t) (size >> 56) & 255);
+    socket_client->write((uint8_t) (size >> 48) & 255);
+    socket_client->write((uint8_t) (size >> 40) & 255);
+    socket_client->write((uint8_t) (size >> 32) & 255);
+    socket_client->write((uint8_t) (size >> 24) & 255);
+    socket_client->write((uint8_t) (size >> 16) & 255);
+    socket_client->write((uint8_t) (size >> 8) & 255);
+    socket_client->write((uint8_t) (size ) & 255);
 } else {
+    //Serial.println(F("size small than 125"));
     socket_client->write((uint8_t) size);
 }
 
