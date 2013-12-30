@@ -1,7 +1,6 @@
 //#include <Muzzleyclient.h>
 #include "sha1.h"
 #include "base64.h"
-#include "MemoryFree.h"
 #include <Ethernet.h>
 #include <WSClient.h>
 
