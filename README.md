@@ -6,7 +6,7 @@ This library supports Sec-WebSocket-Version: 13 and binary *single* frame messag
 ### Limitations
 
 This library:
-  * <del>only supports sending a max 128 byte message (including headers);</del>
+  * <del>only supports sending a max 128 byte message (including headers);</del> - Now supporting Binary Data Framing & compliant with RFC6455 sections 5.6 / 5.7
   * has a considerable memory and sketch size footprint as it uses heavy computation on Sha1, Base64 or MD5;
 
 ### Testing Environment
