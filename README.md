@@ -114,3 +114,7 @@ Thank you to:
   - developers of the third party libraries included by this websocket client library: MD5, sha1 & Base64;
 
 This library is general purpose but was made to support the muzzley arduino library (also available on github). Check http://www.muzzley.com for further reference.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/djsb/arduino-websocketclient/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
