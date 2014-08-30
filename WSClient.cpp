@@ -23,7 +23,7 @@
 // THE SOFTWARE. 
 
 #include "sha1.h"
-#include "base64.h"
+#include "Base64.h"
 #include <Ethernet.h>
 #include <WSClient.h>
 
