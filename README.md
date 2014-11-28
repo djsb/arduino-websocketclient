@@ -7,6 +7,7 @@ This library supports Sec-WebSocket-Version: 13 and binary **multiple** binary f
 
 This library:
   * <del>only supports sending a max 128 byte message (including headers);</del> - Now supporting Binary Data Framing & compliant with RFC6455 sections 5.6 / 5.7
+  * requires arduino 1.0.6
   * has a considerable memory and sketch size footprint as it uses heavy computation on Sha1, Base64 or MD5;
 
 ### Testing Environment
