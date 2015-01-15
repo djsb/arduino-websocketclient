@@ -23,7 +23,7 @@
 // THE SOFTWARE. 
 
 #include "sha1.h"
-#include "base64.h"
+#include "Base64.h"
 #include <Ethernet.h>
 #include <WSClient.h>
 
@@ -342,16 +342,14 @@ char* WSClient::getData() {
     return (char*)socketStr;
 }
 
-void WSClient::sendData(char *str) {
-//    Serial.println(F("")); Serial.print(F("TX: "));
-//    for (int i=0; i<strlen(str); i++)
-//        Serial.print(str[i]);
+void WSClient::sendData(String s) {
+   // Serial.println(F("")); Serial.print(F("TX: "));
+   // for (int i=0; i<strlen(str); i++)
+   //     Serial.print(str[i]);
     if (socket_client->connected()) {
-        sendEncodedData(str);       
+        sendEncodedData(s);
     }
 }
-
-
 
 int WSClient::timedRead() {
   while (!socket_client->available()) {
@@ -362,33 +360,39 @@ int a = socket_client->read();
 return a;
 }
 
-void WSClient::sendEncodedData(char *str) {
- int size = strlen(str);
+bool WSClient::sendEncodedData(String s) {
+    int totalSize = 6 + (s.length() < 126 ? 0 : s.length() < 2^16 ? 2 : 8) + s.length();
+    if (totalSize > 400){//limited by static toSend array size
+        Serial.println("string too long: ");
+        Serial.println(s);
+        Serial.println(totalSize);
+        return false;
+    }
+    uint8_t toSend[totalSize];
+    toSend[0] = B10000001;//FIN,RSV1,RSV2,RSV3,OPCODE(4)
+    toSend[1] = B10000000 + (s.length() < 126 ? s.length() : (s.length() < 2^16 ? 126 : 127));//MASK, LEN(7)
+    int i = 2;
+    if (s.length() < 126){
+    //don't do anything
+    } else if (s.length() < 2^16){
+        toSend[2] = (uint8_t)((s.length() >> 8) & 0xff);
+        toSend[3] = (uint8_t)(s.length() & 0xff);
+        i = 4;
+    } else {
+        //we should never get here, since this would mean the String is using 65k of memory
+        Serial.println("shouldn't be here");
+    }
 
-    // string type
- socket_client->write(0x81);
+    for(int n = 0; n < 4; n++, i++){
+        toSend[i] = B00000000;//MASK_KEY(8)
+    }
 
-    // NOTE: no support for > 16-bit sized messages
- if (size > 125) {
-    //Serial.println(F("size bigger than 125"));
-    socket_client->write(127);
-    socket_client->write((uint8_t) (size >> 56) & 255);
-    socket_client->write((uint8_t) (size >> 48) & 255);
-    socket_client->write((uint8_t) (size >> 40) & 255);
-    socket_client->write((uint8_t) (size >> 32) & 255);
-    socket_client->write((uint8_t) (size >> 24) & 255);
-    socket_client->write((uint8_t) (size >> 16) & 255);
-    socket_client->write((uint8_t) (size >> 8) & 255);
-    socket_client->write((uint8_t) (size ) & 255);
-} else {
-    //Serial.println(F("size small than 125"));
-    socket_client->write((uint8_t) size);
-}
+    for(int n = 0; n < s.length(); n++, i++){
+        toSend[i] = s.charAt(n) ^ B00000000;
+    }
+    socket_client->write(toSend, totalSize);
 
-for (int i=0; i<size; ++i) {
-    socket_client->write(str[i]);
-}
-
+    return true;
 }
 
 

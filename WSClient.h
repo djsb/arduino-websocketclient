@@ -38,12 +38,12 @@ public:
 
     bool handshake(Client &client);     // Handle connection requests to validate and process/refuse connections.
     char* getData(); // Get data off of the stream
-    void sendData(char *str); // Write data to the stream
+    void sendData(String s); // Write data to the stream
     void disconnect();
     char *path;
     char *host;
 
-    void sendEncodedData(char *str);
+    bool sendEncodedData(String s);
 
 
 private:
